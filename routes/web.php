@@ -2,8 +2,12 @@
 
 use App\Http\Controllers\CuadreController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DispensadorController;
 use App\Http\Controllers\EmpleadoController;
+use App\Http\Controllers\LadoController;
+use App\Http\Controllers\MangueraController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -20,6 +24,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::resource('empleados', EmpleadoController::class);
     Route::resource('cuadres', CuadreController::class)->only(['index', 'create', 'store', 'show']);
+    Route::resource('users', UserController::class);
+    Route::resource('dispensadores', DispensadorController::class);
+    Route::resource('lados', LadoController::class)->only(['update']);
+    Route::resource('mangueras', MangueraController::class)->only(['update']);
 });
 
 require __DIR__.'/auth.php';

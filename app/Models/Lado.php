@@ -6,17 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Cuadre extends Model
+class Lado extends Model
 {
+    protected $table = 'lados';
+
     protected $fillable = [
         'dispensador_id',
-        'total',
+        'nombre',
+        'habilitado',
     ];
 
     protected function casts(): array
     {
         return [
-            'total' => 'decimal:2',
+            'habilitado' => 'boolean',
         ];
     }
 
@@ -25,8 +28,8 @@ class Cuadre extends Model
         return $this->belongsTo(Dispensador::class);
     }
 
-    public function detalles(): HasMany
+    public function mangueras(): HasMany
     {
-        return $this->hasMany(CuadreDetalle::class);
+        return $this->hasMany(Manguera::class);
     }
 }
