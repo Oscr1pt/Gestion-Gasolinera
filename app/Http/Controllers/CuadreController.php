@@ -12,11 +12,16 @@ use Illuminate\View\View;
 
 class CuadreController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        $cuadres = Cuadre::with(['dispensador', 'detalles.tipoCombustible'])
-            ->latest()
-            ->paginate(10);
+        $query = Cuadre::with(['dispensador', 'detalles.tipoCombustible'])
+            ->latest();
+
+        if ($request->filled('fecha')) {
+            $query->whereDate('created_at', $request->fecha);
+        }
+
+        $cuadres = $query->paginate(10)->withQueryString();
 
         return view('cuadres.index', compact('cuadres'));
     }
@@ -36,15 +41,25 @@ class CuadreController extends Controller
             'combustibles' => 'required|array',
             'combustibles.*.tipo_combustible_id' => 'required|exists:tipos_combustible,id',
             'combustibles.*.numeracion_inicial' => 'required|numeric|min:0',
-            'combustibles.*.numeracion_final' => 'required|numeric|gt:combustibles.*.numeracion_inicial',
+            'combustibles.*.numeracion_final' => 'required|numeric|gte:combustibles.*.numeracion_inicial',
             'combustibles.*.precio' => 'required|numeric|min:0',
+            'efectivo' => 'nullable|numeric|min:0',
+            'boucher' => 'nullable|numeric|min:0',
+            'credito' => 'nullable|numeric|min:0',
+            'moneda' => 'nullable|numeric|min:0',
+            'gastos' => 'nullable|numeric|min:0',
         ], [
-            'combustibles.*.numeracion_final.gt' => 'La numeración final debe ser mayor que la inicial.',
+            'combustibles.*.numeracion_final.gte' => 'La numeración final debe ser mayor o igual que la inicial.',
         ]);
 
         $cuadre = Cuadre::create([
             'dispensador_id' => $validated['dispensador_id'],
             'total' => 0,
+            'efectivo' => $validated['efectivo'] ?? 0,
+            'boucher' => $validated['boucher'] ?? 0,
+            'credito' => $validated['credito'] ?? 0,
+            'moneda' => $validated['moneda'] ?? 0,
+            'gastos' => $validated['gastos'] ?? 0,
         ]);
 
         $totalCuadre = 0;

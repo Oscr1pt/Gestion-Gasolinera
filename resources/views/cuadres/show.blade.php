@@ -20,15 +20,66 @@
             </a>
         </div>
 
-        <div class="rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 to-white p-6 shadow-sm">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h3 class="text-lg font-bold text-gray-900">Total del Cuadre</h3>
-                    <p class="text-sm text-gray-500">Suma de todos los combustibles</p>
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+            <div class="rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 to-white p-6 shadow-sm">
+                <div class="flex flex-col justify-between h-full">
+                    <div>
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-gray-500">Total Ventas</h3>
+                        <p class="text-xs text-gray-500 mt-1">Suma de combustibles</p>
+                    </div>
+                    <div class="mt-4">
+                        <p class="text-3xl font-bold text-gray-900">${{ number_format($cuadre->total, 2) }}</p>
+                    </div>
                 </div>
-                <div class="text-right">
-                    <p class="text-3xl font-bold text-blue-600">${{ number_format($cuadre->total, 2) }}</p>
+            </div>
+
+            <div class="rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-white p-6 shadow-sm">
+                <div class="flex flex-col justify-between h-full">
+                    <div>
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-gray-500">Total Ingresos</h3>
+                        <p class="text-xs text-gray-500 mt-1">Efectivo + Boucher + Crédito + Moneda</p>
+                    </div>
+                    <div class="mt-4">
+                        <p class="text-3xl font-bold text-emerald-600">${{ number_format($cuadre->total_ingresos, 2) }}</p>
+                    </div>
                 </div>
+            </div>
+
+            <div class="rounded-2xl border border-gray-200 bg-gradient-to-br from-gray-50 to-white p-6 shadow-sm">
+                <div class="flex flex-col justify-between h-full">
+                    <div>
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-gray-500">Diferencia Final</h3>
+                        <p class="text-xs text-gray-500 mt-1">Ingresos - Ventas - Gastos</p>
+                    </div>
+                    <div class="mt-4">
+                        <p class="text-3xl font-bold {{ $cuadre->diferencia < 0 ? 'text-red-600' : 'text-emerald-600' }}">
+                            {{ $cuadre->diferencia < 0 ? '-$' . number_format(abs($cuadre->diferencia), 2) : '$' . number_format($cuadre->diferencia, 2) }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-5">
+            <div class="rounded-xl border border-gray-100 bg-white p-4 shadow-sm">
+                <p class="text-xs text-gray-500 font-medium">Efectivo</p>
+                <p class="text-lg font-bold text-gray-900">${{ number_format($cuadre->efectivo, 2) }}</p>
+            </div>
+            <div class="rounded-xl border border-gray-100 bg-white p-4 shadow-sm">
+                <p class="text-xs text-gray-500 font-medium">Boucher</p>
+                <p class="text-lg font-bold text-gray-900">${{ number_format($cuadre->boucher, 2) }}</p>
+            </div>
+            <div class="rounded-xl border border-gray-100 bg-white p-4 shadow-sm">
+                <p class="text-xs text-gray-500 font-medium">Crédito</p>
+                <p class="text-lg font-bold text-gray-900">${{ number_format($cuadre->credito, 2) }}</p>
+            </div>
+            <div class="rounded-xl border border-gray-100 bg-white p-4 shadow-sm">
+                <p class="text-xs text-gray-500 font-medium">Moneda</p>
+                <p class="text-lg font-bold text-gray-900">${{ number_format($cuadre->moneda, 2) }}</p>
+            </div>
+            <div class="rounded-xl border border-red-100 bg-red-50 p-4 shadow-sm">
+                <p class="text-xs text-red-500 font-medium">Gastos</p>
+                <p class="text-lg font-bold text-red-600">${{ number_format($cuadre->gastos, 2) }}</p>
             </div>
         </div>
 

@@ -23,27 +23,28 @@
                 </div>
 
                 <div class="mb-8 border-t border-gray-100 pt-6">
-                    <h3 class="mb-4 text-sm font-bold uppercase tracking-wider text-gray-500">Tipos de Combustible</h3>
+                    <h3 class="mb-4 text-lg font-bold uppercase tracking-wider text-blue-600">LADO 1</h3>
                     
-                    <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                    <div class="grid grid-cols-1 gap-6 lg:grid-cols-2 mb-8">
                         @foreach($tiposCombustible as $index => $tipo)
+                            @php $formIndex = $index; @endphp
                             <div class="rounded-2xl border border-gray-200 bg-slate-50 p-5">
                                 <h4 class="mb-4 text-lg font-bold text-gray-900">{{ $tipo->nombre }}</h4>
                                 
-                                <input type="hidden" name="combustibles[{{ $index }}][tipo_combustible_id]" value="{{ $tipo->id }}">
+                                <input type="hidden" name="combustibles[{{ $formIndex }}][tipo_combustible_id]" value="{{ $tipo->id }}">
                                 
                                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Numeración Inicial</label>
                                         <input 
                                             type="number" 
-                                            name="combustibles[{{ $index }}][numeracion_inicial]" 
+                                            name="combustibles[{{ $formIndex }}][numeracion_inicial]" 
                                             step="0.001" 
                                             min="0" 
                                             class="block w-full rounded-lg border-gray-200 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
                                             required
-                                            x-model="combustibles[{{ $index }}].numeracion_inicial"
-                                            @input="calculateCombustible({{ $index }})"
+                                            x-model="combustibles[{{ $formIndex }}].numeracion_inicial"
+                                            @input="calculateCombustible({{ $formIndex }})"
                                         >
                                     </div>
                                     
@@ -51,13 +52,13 @@
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Numeración Final</label>
                                         <input 
                                             type="number" 
-                                            name="combustibles[{{ $index }}][numeracion_final]" 
+                                            name="combustibles[{{ $formIndex }}][numeracion_final]" 
                                             step="0.001" 
                                             min="0" 
                                             class="block w-full rounded-lg border-gray-200 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
                                             required
-                                            x-model="combustibles[{{ $index }}].numeracion_final"
-                                            @input="calculateCombustible({{ $index }})"
+                                            x-model="combustibles[{{ $formIndex }}].numeracion_final"
+                                            @input="calculateCombustible({{ $formIndex }})"
                                         >
                                     </div>
                                     
@@ -65,14 +66,14 @@
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Precio por Galón ($)</label>
                                         <input 
                                             type="number" 
-                                            name="combustibles[{{ $index }}][precio]" 
+                                            name="combustibles[{{ $formIndex }}][precio]" 
                                             step="0.01" 
                                             min="0" 
                                             :value="number_format($tipo->precio_por_galon, 2)"
                                             class="block w-full rounded-lg border-gray-200 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
                                             required
-                                            x-model="combustibles[{{ $index }}].precio"
-                                            @input="calculateCombustible({{ $index }})"
+                                            x-model="combustibles[{{ $formIndex }}].precio"
+                                            @input="calculateCombustible({{ $formIndex }})"
                                         >
                                     </div>
                                 </div>
@@ -80,11 +81,80 @@
                                 <div class="mt-4 grid grid-cols-2 gap-4 rounded-lg bg-white p-3 border border-gray-200">
                                     <div>
                                         <p class="text-xs text-gray-500">Galones</p>
-                                        <p class="text-lg font-bold text-gray-900" x-text="combustibles[{{ $index }}].galones.toFixed(3)">0.000</p>
+                                        <p class="text-lg font-bold text-gray-900" x-text="combustibles[{{ $formIndex }}].galones.toFixed(3)">0.000</p>
                                     </div>
                                     <div>
                                         <p class="text-xs text-gray-500">Total</p>
-                                        <p class="text-lg font-bold text-blue-600" x-text="'$' + combustibles[{{ $index }}].total.toFixed(2)">$0.00</p>
+                                        <p class="text-lg font-bold text-blue-600" x-text="'$' + combustibles[{{ $formIndex }}].total.toFixed(2)">$0.00</p>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <h3 class="mb-4 text-lg font-bold uppercase tracking-wider text-blue-600 border-t border-gray-100 pt-6">LADO 2</h3>
+                    
+                    <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                        @foreach($tiposCombustible as $index => $tipo)
+                            @php $formIndex = $index + count($tiposCombustible); @endphp
+                            <div class="rounded-2xl border border-gray-200 bg-slate-50 p-5">
+                                <h4 class="mb-4 text-lg font-bold text-gray-900">{{ $tipo->nombre }}</h4>
+                                
+                                <input type="hidden" name="combustibles[{{ $formIndex }}][tipo_combustible_id]" value="{{ $tipo->id }}">
+                                
+                                <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Numeración Inicial</label>
+                                        <input 
+                                            type="number" 
+                                            name="combustibles[{{ $formIndex }}][numeracion_inicial]" 
+                                            step="0.001" 
+                                            min="0" 
+                                            class="block w-full rounded-lg border-gray-200 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
+                                            required
+                                            x-model="combustibles[{{ $formIndex }}].numeracion_inicial"
+                                            @input="calculateCombustible({{ $formIndex }})"
+                                        >
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Numeración Final</label>
+                                        <input 
+                                            type="number" 
+                                            name="combustibles[{{ $formIndex }}][numeracion_final]" 
+                                            step="0.001" 
+                                            min="0" 
+                                            class="block w-full rounded-lg border-gray-200 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
+                                            required
+                                            x-model="combustibles[{{ $formIndex }}].numeracion_final"
+                                            @input="calculateCombustible({{ $formIndex }})"
+                                        >
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Precio por Galón ($)</label>
+                                        <input 
+                                            type="number" 
+                                            name="combustibles[{{ $formIndex }}][precio]" 
+                                            step="0.01" 
+                                            min="0" 
+                                            :value="number_format($tipo->precio_por_galon, 2)"
+                                            class="block w-full rounded-lg border-gray-200 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
+                                            required
+                                            x-model="combustibles[{{ $formIndex }}].precio"
+                                            @input="calculateCombustible({{ $formIndex }})"
+                                        >
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4 grid grid-cols-2 gap-4 rounded-lg bg-white p-3 border border-gray-200">
+                                    <div>
+                                        <p class="text-xs text-gray-500">Galones</p>
+                                        <p class="text-lg font-bold text-gray-900" x-text="combustibles[{{ $formIndex }}].galones.toFixed(3)">0.000</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-gray-500">Total</p>
+                                        <p class="text-lg font-bold text-blue-600" x-text="'$' + combustibles[{{ $formIndex }}].total.toFixed(2)">$0.00</p>
                                     </div>
                                 </div>
                             </div>
@@ -92,14 +162,48 @@
                     </div>
                 </div>
 
-                <div class="mb-8 rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 to-white p-6">
-                    <div class="flex items-center justify-between">
+                <div class="mb-8 border-t border-gray-100 pt-6">
+                    <h3 class="mb-4 text-sm font-bold uppercase tracking-wider text-gray-500">Ingresos y Gastos</h3>
+                    
+                    <div class="grid grid-cols-1 gap-6 md:grid-cols-3 lg:grid-cols-5">
                         <div>
-                            <h3 class="text-lg font-bold text-gray-900">Total del Cuadre</h3>
-                            <p class="text-sm text-gray-500">Suma de todos los combustibles</p>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Efectivo ($)</label>
+                            <input type="number" name="efectivo" step="0.01" min="0" class="block w-full rounded-lg border-gray-200 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500" x-model.number="efectivo">
                         </div>
-                        <div class="text-right">
-                            <p class="text-3xl font-bold text-blue-600" x-text="'$' + totalCuadre.toFixed(2)">$0.00</p>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Boucher ($)</label>
+                            <input type="number" name="boucher" step="0.01" min="0" class="block w-full rounded-lg border-gray-200 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500" x-model.number="boucher">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Crédito ($)</label>
+                            <input type="number" name="credito" step="0.01" min="0" class="block w-full rounded-lg border-gray-200 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500" x-model.number="credito">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Moneda ($)</label>
+                            <input type="number" name="moneda" step="0.01" min="0" class="block w-full rounded-lg border-gray-200 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500" x-model.number="moneda">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Gastos ($)</label>
+                            <input type="number" name="gastos" step="0.01" min="0" class="block w-full rounded-lg border-gray-200 bg-white px-3 py-2 text-sm focus:border-red-500 focus:ring-red-500" x-model.number="gastos">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-8 rounded-2xl border border-gray-200 bg-slate-50 p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 divide-y md:divide-y-0 md:divide-x divide-gray-200 text-center">
+                        <div class="pt-4 md:pt-0">
+                            <p class="text-sm font-bold text-gray-500 uppercase tracking-wider">Total Ventas (Combustibles)</p>
+                            <p class="text-3xl font-bold text-gray-900 mt-2" x-text="'$' + totalCuadre.toFixed(2)">$0.00</p>
+                        </div>
+                        <div class="pt-4 md:pt-0">
+                            <p class="text-sm font-bold text-gray-500 uppercase tracking-wider">Total Ingresos</p>
+                            <p class="text-3xl font-bold text-blue-600 mt-2" x-text="'$' + totalIngresos.toFixed(2)">$0.00</p>
+                        </div>
+                        <div class="pt-4 md:pt-0">
+                            <p class="text-sm font-bold text-gray-500 uppercase tracking-wider">Diferencia Final</p>
+                            <p class="text-3xl font-bold mt-2" 
+                               :class="{'text-emerald-600': diferencia >= 0, 'text-red-600': diferencia < 0}"
+                               x-text="diferencia < 0 ? '-$' + Math.abs(diferencia).toFixed(2) : '$' + diferencia.toFixed(2)">$0.00</p>
                         </div>
                     </div>
                 </div>
@@ -127,9 +231,32 @@
                             total: 0
                         },
                     @endforeach
+                    @foreach($tiposCombustible as $tipo)
+                        {
+                            numeracion_inicial: 0,
+                            numeracion_final: 0,
+                            precio: {{ $tipo->precio_por_galon }},
+                            galones: 0,
+                            total: 0
+                        },
+                    @endforeach
                 ],
+                efectivo: '',
+                boucher: '',
+                credito: '',
+                moneda: '',
+                gastos: '',
                 get totalCuadre() {
                     return this.combustibles.reduce((sum, c) => sum + c.total, 0);
+                },
+                get totalIngresos() {
+                    return (parseFloat(this.efectivo) || 0) + 
+                           (parseFloat(this.boucher) || 0) + 
+                           (parseFloat(this.credito) || 0) + 
+                           (parseFloat(this.moneda) || 0);
+                },
+                get diferencia() {
+                    return this.totalIngresos - this.totalCuadre - (parseFloat(this.gastos) || 0);
                 },
                 calculateCombustible(index) {
                     const c = this.combustibles[index];
