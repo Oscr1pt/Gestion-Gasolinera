@@ -17,4 +17,9 @@ class Turno extends Model
     {
         return $this->hasMany(Cuadre::class);
     }
+
+    public function empleados(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Empleado::class);
+    }
 }

@@ -50,8 +50,14 @@
             Dispensadores
         </a>
 
+        <a href="{{ route('turnos.index') }}" class="group mb-1 flex items-center rounded-lg px-4 py-2.5 transition-all {{ $navLink(request()->routeIs('turnos.*')) }}">
+            <svg class="{{ $navIcon(request()->routeIs('turnos.*')) }} mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            Turnos
+        </a>
+
         @foreach([
-            ['label' => 'Turnos', 'icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', 'route' => null],
             ['label' => 'Ventas', 'icon' => 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z', 'route' => null],
             ['label' => 'Reportes', 'icon' => 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z', 'route' => null],
         ] as $item)
@@ -85,7 +91,7 @@
             <div class="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-blue-400/20 blur-2xl"></div>
             <div class="relative flex items-center justify-between">
                 <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Turno actual</span>
-                <span class="rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-400">Activo</span>
+                <span id="turno-estado" class="rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-400">Activo</span>
             </div>
             <h4 id="turno-nombre" class="relative mt-3 text-sm font-bold">Turno Matutino</h4>
             <p id="turno-horario" class="relative mt-1 text-[11px] text-slate-400">06:00 AM — 02:00 PM</p>
@@ -101,17 +107,24 @@
             const hora = new Date().getHours();
             const turnoNombre = document.getElementById('turno-nombre');
             const turnoHorario = document.getElementById('turno-horario');
+            const turnoEstado = document.getElementById('turno-estado');
 
-            if (turnoNombre && turnoHorario) {
+            if (turnoNombre && turnoHorario && turnoEstado) {
                 if (hora >= 6 && hora < 14) {
                     turnoNombre.textContent = 'Turno Matutino';
-                    turnoHorario.textContent = '06:00 AM — 02:00 PM';
-                } else if (hora >= 14 && hora <= 22) {
+                    turnoHorario.textContent = '06:00 AM — 01:59 PM';
+                    turnoEstado.textContent = 'Activo';
+                    turnoEstado.className = 'rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-400';
+                } else if (hora >= 14 && hora < 22) {
                     turnoNombre.textContent = 'Turno Nocturno';
                     turnoHorario.textContent = '02:00 PM — 10:00 PM';
+                    turnoEstado.textContent = 'Activo';
+                    turnoEstado.className = 'rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-400';
                 } else {
-                    turnoNombre.textContent = 'Turno Matutino';
-                    turnoHorario.textContent = '06:00 AM — 02:00 PM';
+                    turnoNombre.textContent = 'Turno Nocturno';
+                    turnoHorario.textContent = '10:01 PM — 05:59 AM';
+                    turnoEstado.textContent = 'Inactivo';
+                    turnoEstado.className = 'rounded-full bg-red-500/20 px-2 py-0.5 text-[10px] font-bold text-red-400';
                 }
             }
         });

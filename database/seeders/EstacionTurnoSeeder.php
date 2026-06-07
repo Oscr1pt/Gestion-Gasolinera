@@ -17,8 +17,7 @@ class EstacionTurnoSeeder extends Seeder
 
         $turnos = [
             ['nombre' => 'Matutino', 'hora_inicio' => '06:00:00', 'hora_fin' => '14:00:00'],
-            ['nombre' => 'Vespertino', 'hora_inicio' => '14:00:00', 'hora_fin' => '22:00:00'],
-            ['nombre' => 'Nocturno', 'hora_inicio' => '22:00:00', 'hora_fin' => '06:00:00'],
+            ['nombre' => 'Nocturno', 'hora_inicio' => '22:00:00', 'hora_fin' => '10:00:00'],
         ];
 
         foreach ($turnos as $turno) {

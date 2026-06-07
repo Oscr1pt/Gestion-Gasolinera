@@ -18,7 +18,7 @@ class DispensadorController extends Controller
             ->withCount(['lados as mangueras_count' => function($query) {
                 $query->join('mangueras', 'lados.id', '=', 'mangueras.lado_id');
             }])
-            ->latest()
+            ->oldest()
             ->paginate(10);
         return view('dispensadores.index', compact('dispensadores'));
     }
@@ -87,6 +87,20 @@ class DispensadorController extends Controller
         $dispensador->update([
             'nombre' => $validated['nombre'],
         ]);
+
+        foreach ($dispensador->lados as $lado) {
+            $ladoData = $request->input("lados.{$lado->id}");
+            if ($ladoData !== null) {
+                $lado->update(['habilitado' => $ladoData['habilitado'] ?? 0]);
+            }
+
+            foreach ($lado->mangueras as $manguera) {
+                $mangueraData = $request->input("mangueras.{$manguera->id}");
+                if ($mangueraData !== null) {
+                    $manguera->update(['habilitado' => $mangueraData['habilitado'] ?? 0]);
+                }
+            }
+        }
 
         return redirect()
             ->route('dispensadores.show', $dispensador)

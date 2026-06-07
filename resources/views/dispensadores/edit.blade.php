@@ -8,7 +8,7 @@
                 <p class="mt-1 text-sm text-gray-500">Habilita o inhabilita lados y mangueras individuales</p>
             </div>
 
-            <form method="POST" action="{{ route('dispensadores.update', $dispensador) }}" class="p-6">
+            <form id="form-dispensador" method="POST" action="{{ route('dispensadores.update', $dispensador) }}" class="p-6 pb-0">
                 @csrf
                 @method('PUT')
 
@@ -18,6 +18,7 @@
                     <x-input-error :messages="$errors->get('nombre')" class="mt-2" />
                 </div>
 
+            <div class="px-6 pb-6">
                 <div class="mb-8 border-t border-gray-100 pt-6">
                     <h3 class="mb-4 text-sm font-bold uppercase tracking-wider text-gray-500">Lados y Mangueras</h3>
                     
@@ -26,16 +27,15 @@
                             <div class="rounded-2xl border border-gray-200 bg-slate-50 p-5">
                                 <div class="mb-4 flex items-center justify-between">
                                     <h4 class="text-lg font-bold text-gray-900">{{ $lado->nombre }}</h4>
-                                    <form method="POST" action="{{ route('lados.update', $lado) }}" class="inline">
-                                        @csrf
-                                        @method('PUT')
+                                    <div class="inline">
                                         <label class="flex items-center gap-2 cursor-pointer">
-                                            <input type="checkbox" name="habilitado" value="1" {{ $lado->habilitado ? 'checked' : '' }} onchange="this.form.submit()" class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                            <input type="hidden" name="lados[{{ $lado->id }}][habilitado]" value="0">
+                                            <input type="checkbox" name="lados[{{ $lado->id }}][habilitado]" value="1" {{ $lado->habilitado ? 'checked' : '' }} class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
                                             <span class="text-sm font-medium {{ $lado->habilitado ? 'text-emerald-600' : 'text-red-600' }}">
                                                 {{ $lado->habilitado ? 'Habilitado' : 'Inhabilitado' }}
                                             </span>
                                         </label>
-                                    </form>
+                                    </div>
                                 </div>
                                 
                                 @if($lado->habilitado)
@@ -44,16 +44,15 @@
                                             <div class="rounded-lg border border-gray-200 bg-white p-3">
                                                 <div class="flex items-center justify-between mb-2">
                                                     <span class="text-sm font-semibold text-gray-900">Manguera {{ $manguera->numero }}</span>
-                                                    <form method="POST" action="{{ route('mangueras.update', $manguera) }}" class="inline">
-                                                        @csrf
-                                                        @method('PUT')
+                                                    <div class="inline">
                                                         <label class="flex items-center gap-2 cursor-pointer">
-                                                            <input type="checkbox" name="habilitado" value="1" {{ $manguera->habilitado ? 'checked' : '' }} onchange="this.form.submit()" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                                            <input type="hidden" name="mangueras[{{ $manguera->id }}][habilitado]" value="0">
+                                                            <input type="checkbox" name="mangueras[{{ $manguera->id }}][habilitado]" value="1" {{ $manguera->habilitado ? 'checked' : '' }} class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
                                                             <span class="text-xs {{ $manguera->habilitado ? 'text-emerald-600' : 'text-red-600' }}">
                                                                 {{ $manguera->habilitado ? 'Activa' : 'Inactiva' }}
                                                             </span>
                                                         </label>
-                                                    </form>
+                                                    </div>
                                                 </div>
                                                 <div class="h-2 rounded-full {{ $manguera->habilitado ? 'bg-emerald-500' : 'bg-red-500' }}"></div>
                                             </div>
@@ -73,6 +72,7 @@
                         Guardar cambios
                     </button>
                 </div>
+            </div>
             </form>
         </div>
     </div>

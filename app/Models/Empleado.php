@@ -47,4 +47,9 @@ class Empleado extends Model
     {
         return $this->getRawOriginal('estado') ?? 'activo';
     }
+
+    public function turnos(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Turno::class);
+    }
 }
