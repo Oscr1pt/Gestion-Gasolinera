@@ -47,8 +47,6 @@
                             <th scope="col" class="px-6 py-3.5 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500">Cédula</th>
                             <th scope="col" class="px-6 py-3.5 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500">Teléfono</th>
                             <th scope="col" class="px-6 py-3.5 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500">Posición</th>
-                            <th scope="col" class="px-6 py-3.5 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500">Fecha inicio</th>
-                            <th scope="col" class="px-6 py-3.5 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500">Fecha terminación</th>
                             <th scope="col" class="px-6 py-3.5 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500">Estado</th>
                             <th scope="col" class="px-6 py-3.5 text-center text-[11px] font-bold uppercase tracking-wider text-gray-500">Acciones</th>
                         </tr>
@@ -73,10 +71,6 @@
                                 <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-600">{{ $empleado->cedula }}</td>
                                 <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-600">{{ $empleado->telefono }}</td>
                                 <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-600">{{ $empleado->posicion }}</td>
-                                <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-600">{{ \Carbon\Carbon::parse($empleado->fecha_inicio)->format('d/m/Y') }}</td>
-                                <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-400">
-                                    {{ $empleado->fecha_terminacion ? \Carbon\Carbon::parse($empleado->fecha_terminacion)->format('d/m/Y') : '—' }}
-                                </td>
                                 <td class="whitespace-nowrap px-6 py-4">
                                     @if($empleado->estado === 'Activo')
                                         <span class="inline-flex rounded-full bg-emerald-100 px-2.5 py-1 text-[11px] font-bold text-emerald-700">{{ $empleado->estado }}</span>
@@ -92,19 +86,28 @@
                                         <a href="{{ route('empleados.edit', $empleado) }}" class="rounded-lg bg-blue-50 p-2 text-blue-500 transition hover:bg-blue-100 hover:text-blue-700" title="Editar">
                                             <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
                                         </a>
-                                        <form action="{{ route('empleados.destroy', $empleado) }}" method="POST" class="inline" onsubmit="return confirm('¿Estás seguro de cancelar este empleado?')">
+                                        <form action="{{ route('empleados.disable', $empleado) }}" method="POST" class="inline" onsubmit="return confirm('¿Estás seguro de deshabilitar a este empleado?')">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" class="rounded-lg bg-orange-50 p-2 text-orange-500 transition hover:bg-orange-100 hover:text-orange-700" title="Deshabilitar">
+                                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" /></svg>
+                                            </button>
+                                        </form>
+                                        @if(auth()->user()->role === 'admin')
+                                        <form action="{{ route('empleados.destroy', $empleado) }}" method="POST" class="inline" onsubmit="return confirm('¿Estás seguro de ELIMINAR permanentemente este empleado?')">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="rounded-lg bg-red-50 p-2 text-red-500 transition hover:bg-red-100 hover:text-red-700" title="Eliminar">
                                                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                             </button>
                                         </form>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="px-6 py-12 text-center text-sm text-gray-500">
+                                <td colspan="6" class="px-6 py-12 text-center text-sm text-gray-500">
                                     @if(request('search'))
                                         No se encontraron empleados para "{{ request('search') }}".
                                     @else

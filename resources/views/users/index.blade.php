@@ -45,6 +45,7 @@
                         <tr class="bg-slate-50/80">
                             <th scope="col" class="px-6 py-3.5 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500">Nombre</th>
                             <th scope="col" class="px-6 py-3.5 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500">Email</th>
+                            <th scope="col" class="px-6 py-3.5 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500">Rol</th>
                             <th scope="col" class="px-6 py-3.5 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500">Teléfono</th>
                             <th scope="col" class="px-6 py-3.5 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500">Estado</th>
                             <th scope="col" class="px-6 py-3.5 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500">Fecha de creación</th>
@@ -65,6 +66,13 @@
                                     </div>
                                 </td>
                                 <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-600">{{ $user->email }}</td>
+                                <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
+                                    @if($user->role === 'admin')
+                                        <span class="inline-flex rounded-full bg-purple-100 px-2.5 py-1 text-[11px] font-bold text-purple-700">Admin</span>
+                                    @else
+                                        <span class="inline-flex rounded-full bg-blue-100 px-2.5 py-1 text-[11px] font-bold text-blue-700">Usuario</span>
+                                    @endif
+                                </td>
                                 <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-600">{{ $user->telefono }}</td>
                                 <td class="whitespace-nowrap px-6 py-4">
                                     @if($user->estado)
@@ -82,19 +90,30 @@
                                         <a href="{{ route('users.edit', $user) }}" class="rounded-lg bg-blue-50 p-2 text-blue-500 transition hover:bg-blue-100 hover:text-blue-700" title="Editar">
                                             <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
                                         </a>
-                                        <form action="{{ route('users.destroy', $user) }}" method="POST" class="inline" onsubmit="return confirm('¿Estás seguro de desactivar este usuario?')">
+                                        @if(auth()->user()->role === 'admin' || $user->role !== 'admin')
+                                        <form action="{{ route('users.disable', $user) }}" method="POST" class="inline" onsubmit="return confirm('¿Estás seguro de desactivar este usuario?')">
                                             @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="rounded-lg bg-red-50 p-2 text-red-500 transition hover:bg-red-100 hover:text-red-700" title="Desactivar">
+                                            @method('PATCH')
+                                            <button type="submit" class="rounded-lg bg-orange-50 p-2 text-orange-500 transition hover:bg-orange-100 hover:text-orange-700" title="Desactivar">
                                                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
                                             </button>
                                         </form>
+                                        @endif
+                                        @if(auth()->user()->role === 'admin')
+                                        <form action="{{ route('users.destroy', $user) }}" method="POST" class="inline" onsubmit="return confirm('¿Estás seguro de ELIMINAR permanentemente este usuario?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="rounded-lg bg-red-50 p-2 text-red-500 transition hover:bg-red-100 hover:text-red-700" title="Eliminar">
+                                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                            </button>
+                                        </form>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="px-6 py-12 text-center text-sm text-gray-500">
+                                <td colspan="7" class="px-6 py-12 text-center text-sm text-gray-500">
                                     @if(request('search'))
                                         No se encontraron usuarios para "{{ request('search') }}".
                                     @else

@@ -98,4 +98,13 @@ class CuadreController extends Controller
 
         return view('cuadres.show', compact('cuadre'));
     }
+
+    public function destroy(Cuadre $cuadre): RedirectResponse
+    {
+        abort_if(auth()->user()->role !== 'admin', 403, 'No tienes permisos para eliminar cuadres.');
+        
+        $cuadre->delete();
+
+        return redirect()->route('cuadres.index')->with('success', 'Cuadre eliminado exitosamente.');
+    }
 }

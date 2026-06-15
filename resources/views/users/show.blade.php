@@ -49,6 +49,17 @@
                         </div>
 
                         <div class="bg-slate-50 rounded-xl p-5">
+                            <p class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Rol</p>
+                            <p class="text-lg font-semibold text-gray-900">
+                                @if($user->role === 'admin')
+                                    <span class="text-purple-600">Admin</span>
+                                @else
+                                    <span class="text-blue-600">Usuario</span>
+                                @endif
+                            </p>
+                        </div>
+
+                        <div class="bg-slate-50 rounded-xl p-5">
                             <p class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Fecha de Registro</p>
                             <p class="text-lg font-semibold text-gray-900">{{ $user->created_at->format('d/m/Y H:i') }}</p>
                         </div>

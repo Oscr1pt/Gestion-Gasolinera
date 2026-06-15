@@ -15,8 +15,8 @@
                 <svg class="h-9 w-9" fill="currentColor" viewBox="0 0 24 24"><path d="M19.5 8.5C18.1 8.5 17 9.6 17 11v6c0 .6-.4 1-1 1s-1-.4-1-1v-8C15 6.2 12.8 4 10 4H6C3.2 4 1 6.2 1 9v11h2v-5h8v5h2V9c0-1.7 1.3-3 3-3s3 1.3 3 3v2.5c0 1.1-.9 2-2 2h-1v-2h-1v2.5c0 1.9 1.6 3.5 3.5 3.5S22 15.4 22 13.5V11c0-1.4-1.1-2.5-2.5-2.5zM12 13H4V9c0-.6.4-1 1-1h6c.6 0 1 .4 1 1v4z"/></svg>
             </div>
             <div>
-                <span class="block text-lg font-bold leading-none tracking-wide text-white">GASOLINERA</span>
-                <span class="mt-1 block text-sm font-semibold tracking-[0.2em] text-orange-500">CONTROL</span>
+                <span class="block text-lg font-bold leading-none tracking-wide text-white uppercase">{{ $generales_config['nombre_empresa']->valor ?? 'GASOLINERA' }}</span>
+                <span class="mt-1 block text-sm font-semibold tracking-[0.2em] text-orange-500 uppercase">{{ $generales_config['nombre_sistema']->valor ?? 'CONTROL' }}</span>
             </div>
         </div>
     </div>
@@ -84,6 +84,13 @@
             </svg>
             Usuarios
         </a>
+
+        <a href="{{ route('configuracion.index') }}" class="group mb-1 flex items-center rounded-lg px-4 py-2.5 transition-all {{ $navLink(request()->routeIs('configuracion.*')) }}">
+            <svg class="{{ $navIcon(request()->routeIs('configuracion.*')) }} mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+            Configuración
+        </a>
     </nav>
 
     <div class="mt-auto px-4 pb-6">
@@ -104,25 +111,60 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const hora = new Date().getHours();
+            // Horarios desde BD, fallback a valores por defecto si no existen
+            const matutinoInicioStr = '{{ $turnos_config["matutino"]->hora_inicio ?? "06:00:00" }}';
+            const matutinoFinStr = '{{ $turnos_config["matutino"]->hora_fin ?? "14:00:00" }}';
+            const nocturnoInicioStr = '{{ $turnos_config["nocturno"]->hora_inicio ?? "14:00:00" }}';
+            const nocturnoFinStr = '{{ $turnos_config["nocturno"]->hora_fin ?? "06:00:00" }}';
+
+            function parseTime(timeStr) {
+                const [hours, minutes] = timeStr.split(':').map(Number);
+                return hours * 60 + minutes; // Convert to minutes since midnight
+            }
+
+            function formatTime(timeStr) {
+                const [hours, minutes] = timeStr.split(':').map(Number);
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                let h = hours % 12;
+                h = h ? h : 12;
+                return `${h.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+            }
+
+            const now = new Date();
+            const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+            const matutinoInicio = parseTime(matutinoInicioStr);
+            const matutinoFin = parseTime(matutinoFinStr);
+            const nocturnoInicio = parseTime(nocturnoInicioStr);
+            const nocturnoFin = parseTime(nocturnoFinStr);
+
             const turnoNombre = document.getElementById('turno-nombre');
             const turnoHorario = document.getElementById('turno-horario');
             const turnoEstado = document.getElementById('turno-estado');
 
+            function isBetween(current, start, end) {
+                if (start <= end) {
+                    return current >= start && current < end;
+                } else {
+                    // Crosses midnight
+                    return current >= start || current < end;
+                }
+            }
+
             if (turnoNombre && turnoHorario && turnoEstado) {
-                if (hora >= 6 && hora < 14) {
+                if (isBetween(currentMinutes, matutinoInicio, matutinoFin)) {
                     turnoNombre.textContent = 'Turno Matutino';
-                    turnoHorario.textContent = '06:00 AM — 01:59 PM';
+                    turnoHorario.textContent = `${formatTime(matutinoInicioStr)} — ${formatTime(matutinoFinStr)}`;
                     turnoEstado.textContent = 'Activo';
                     turnoEstado.className = 'rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-400';
-                } else if (hora >= 14 && hora < 22) {
+                } else if (isBetween(currentMinutes, nocturnoInicio, nocturnoFin)) {
                     turnoNombre.textContent = 'Turno Nocturno';
-                    turnoHorario.textContent = '02:00 PM — 10:00 PM';
+                    turnoHorario.textContent = `${formatTime(nocturnoInicioStr)} — ${formatTime(nocturnoFinStr)}`;
                     turnoEstado.textContent = 'Activo';
                     turnoEstado.className = 'rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-400';
                 } else {
-                    turnoNombre.textContent = 'Turno Nocturno';
-                    turnoHorario.textContent = '10:01 PM — 05:59 AM';
+                    turnoNombre.textContent = 'Fuera de Turno';
+                    turnoHorario.textContent = '—';
                     turnoEstado.textContent = 'Inactivo';
                     turnoEstado.className = 'rounded-full bg-red-500/20 px-2 py-0.5 text-[10px] font-bold text-red-400';
                 }

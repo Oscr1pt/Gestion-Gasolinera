@@ -42,6 +42,7 @@ class UserController extends Controller
             'telefono' => 'required|string|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'estado' => 'boolean',
+            'role' => 'nullable|string|in:admin,usuario',
         ]);
 
         User::create([
@@ -50,6 +51,7 @@ class UserController extends Controller
             'telefono' => $validated['telefono'],
             'password' => Hash::make($validated['password']),
             'estado' => $validated['estado'] ?? true,
+            'role' => $validated['role'] ?? 'usuario',
         ]);
 
         return redirect()->route('users.index')->with('success', 'Usuario creado exitosamente.');
@@ -73,6 +75,7 @@ class UserController extends Controller
             'telefono' => 'required|string|unique:users,telefono,' . $user->id,
             'password' => 'nullable|string|min:8|confirmed',
             'estado' => 'boolean',
+            'role' => 'nullable|string|in:admin,usuario',
         ]);
 
         $user->update([
@@ -82,6 +85,10 @@ class UserController extends Controller
             'estado' => $validated['estado'] ?? $user->estado,
         ]);
 
+        if (isset($validated['role'])) {
+            $user->update(['role' => $validated['role']]);
+        }
+
         if (!empty($validated['password'])) {
             $user->update(['password' => Hash::make($validated['password'])]);
         }
@@ -89,10 +96,21 @@ class UserController extends Controller
         return redirect()->route('users.index')->with('success', 'Usuario actualizado exitosamente.');
     }
 
-    public function destroy(User $user): RedirectResponse
+    public function disable(User $user): RedirectResponse
     {
+        abort_if(auth()->user()->role !== 'admin' && $user->role === 'admin', 403, 'No puedes deshabilitar a un administrador.');
+
         $user->update(['estado' => false]);
 
         return redirect()->route('users.index')->with('success', 'Usuario desactivado exitosamente.');
+    }
+
+    public function destroy(User $user): RedirectResponse
+    {
+        abort_if(auth()->user()->role !== 'admin', 403, 'No tienes permisos para eliminar usuarios.');
+        
+        $user->delete();
+
+        return redirect()->route('users.index')->with('success', 'Usuario eliminado exitosamente.');
     }
 }

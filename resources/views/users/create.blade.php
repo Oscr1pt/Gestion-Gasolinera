@@ -47,8 +47,20 @@
                                 <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                             </div>
 
+                            <!-- Rol -->
+                            @if(auth()->user()->role === 'admin')
+                            <div>
+                                <x-input-label for="role" :value="__('Rol del Usuario')" />
+                                <select id="role" name="role" class="block mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
+                                    <option value="usuario" {{ old('role') === 'usuario' ? 'selected' : '' }}>Usuario (Secretaria)</option>
+                                    <option value="admin" {{ old('role') === 'admin' ? 'selected' : '' }}>Administrador</option>
+                                </select>
+                                <x-input-error :messages="$errors->get('role')" class="mt-2" />
+                            </div>
+                            @endif
+
                             <!-- Estado -->
-                            <div class="flex items-center">
+                            <div class="flex items-center pt-6">
                                 <input id="estado" name="estado" type="checkbox" value="1" checked class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
                                 <label for="estado" class="ml-2 block text-sm text-gray-700">
                                     Usuario activo
