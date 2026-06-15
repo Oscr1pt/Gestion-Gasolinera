@@ -54,6 +54,17 @@
                                                         </label>
                                                     </div>
                                                 </div>
+                                                <div class="mb-3">
+                                                    <label class="block text-xs font-medium text-gray-700 mb-1">Combustible</label>
+                                                    <select name="mangueras[{{ $manguera->id }}][tipo_combustible_id]" class="block w-full rounded-md border-gray-300 py-1.5 text-xs shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                                        <option value="">Ninguno</option>
+                                                        @foreach($tiposCombustible as $tipo)
+                                                            <option value="{{ $tipo->id }}" @selected($manguera->tipo_combustible_id == $tipo->id)>
+                                                                {{ $tipo->nombre }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
                                                 <div class="h-2 rounded-full {{ $manguera->habilitado ? 'bg-emerald-500' : 'bg-red-500' }}"></div>
                                             </div>
                                         @endforeach

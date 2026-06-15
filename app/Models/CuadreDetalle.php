@@ -10,6 +10,7 @@ class CuadreDetalle extends Model
     protected $fillable = [
         'cuadre_id',
         'tipo_combustible_id',
+        'manguera_id',
         'numeracion_inicial',
         'numeracion_final',
         'galones',
@@ -31,6 +32,11 @@ class CuadreDetalle extends Model
     public function cuadre(): BelongsTo
     {
         return $this->belongsTo(Cuadre::class);
+    }
+
+    public function manguera(): BelongsTo
+    {
+        return $this->belongsTo(Manguera::class);
     }
 
     public function tipoCombustible(): BelongsTo

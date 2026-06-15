@@ -55,6 +55,34 @@
             </x-dashboard.kpi-card>
         </div>
 
+        {{-- Estado de Tanques --}}
+        <div>
+            <h3 class="text-lg font-bold text-gray-900 mb-4">Estado de Tanques</h3>
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                @foreach($tanques as $tanque)
+                    @php
+                        $porcentaje = $tanque->capacidad_maxima > 0 ? ($tanque->existencia_actual / $tanque->capacidad_maxima) * 100 : 0;
+                        $color = $porcentaje > 50 ? 'bg-emerald-500' : ($porcentaje > 20 ? 'bg-yellow-500' : 'bg-red-500');
+                    @endphp
+                    <div class="rounded-xl border border-gray-100 bg-white p-4 shadow-sm">
+                        <div class="mb-2 flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-semibold text-gray-800">{{ $tanque->nombre }}</p>
+                                <p class="text-xs text-gray-500">{{ $tanque->tipoCombustible->nombre ?? 'N/A' }}</p>
+                            </div>
+                            <span class="text-sm font-bold {{ $porcentaje < 20 ? 'text-red-600' : 'text-gray-700' }}">{{ number_format($porcentaje, 1) }}%</span>
+                        </div>
+                        <div class="w-full overflow-hidden rounded-full bg-gray-200">
+                            <div class="h-2 rounded-full {{ $color }}" style="width: {{ $porcentaje }}%"></div>
+                        </div>
+                        <p class="mt-2 text-right text-xs text-gray-500">
+                            {{ number_format($tanque->existencia_actual, 2) }} / {{ number_format($tanque->capacidad_maxima, 2) }} gal
+                        </p>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+
         {{-- Gráficos --}}
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-12">
             <x-dashboard.chart-card

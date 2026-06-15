@@ -2,32 +2,54 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cuadre;
+use App\Models\Dispensador;
 use App\Models\Empleado;
+use App\Models\Turno;
+use App\Models\Tanque;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
     public function __invoke(): View
     {
+        $hoy = Carbon::today();
+
         $empleadosActivos = Empleado::where('estado', 'activo')->count();
+        $ventasHoy = Cuadre::whereDate('created_at', $hoy)->sum('total');
+        $turnosHoy = Cuadre::whereDate('created_at', $hoy)->count();
+        $dispensadorasActivas = Dispensador::count();
+
+        $ventasUltimaSemana = [];
+        $labels = [];
+        $data = [];
+        for ($i = 6; $i >= 0; $i--) {
+            $fecha = Carbon::today()->subDays($i);
+            $total = Cuadre::whereDate('created_at', $fecha)->sum('total');
+            $labels[] = $fecha->format('D');
+            $data[] = (float) $total;
+        }
 
         return view('dashboard', [
             'kpis' => [
                 'empleados_activos' => $empleadosActivos,
-                'empleados_trend' => $empleadosActivos > 0 ? '+2 este mes' : null,
-                'turnos_hoy' => 3,
-                'dispensadoras' => 8,
-                'ventas_hoy' => 18450.00,
+                'empleados_trend' => $empleadosActivos > 0 ? '+0 este mes' : null,
+                'turnos_hoy' => $turnosHoy,
+                'dispensadoras' => $dispensadorasActivas,
+                'ventas_hoy' => $ventasHoy,
             ],
             'chartVentasDia' => [
-                'labels' => ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
-                'data' => [15200, 16800, 14500, 19200, 17800, 22100, 18450],
+                'labels' => $labels,
+                'data' => $data,
             ],
             'chartRendimientoEmpleados' => $this->rendimientoEmpleadosChart(),
             'chartDistribucionTurnos' => [
-                'labels' => ['Matutino', 'Vespertino', 'Nocturno'],
-                'data' => [38, 35, 27],
+                'labels' => ['Mañana', 'Tarde', 'Noche'],
+                'data' => [45, 30, 25], // Simulados por ahora
             ],
+            'tanques' => Tanque::with('tipoCombustible')->get(),
         ]);
     }
 

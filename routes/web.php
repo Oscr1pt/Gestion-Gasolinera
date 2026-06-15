@@ -7,6 +7,8 @@ use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\LadoController;
 use App\Http\Controllers\MangueraController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReporteController;
+use App\Http\Controllers\TanqueController;
 use App\Http\Controllers\TurnoController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ConfiguracionController;
@@ -33,6 +35,13 @@ Route::middleware('auth')->group(function () {
     Route::resource('lados', LadoController::class)->only(['update']);
     Route::resource('mangueras', MangueraController::class)->only(['update']);
     Route::resource('turnos', TurnoController::class)->except(['show']);
+
+    // Tanques
+    Route::get('tanques', [TanqueController::class, 'index'])->name('tanques.index');
+    Route::post('tanques/{tanque}/recarga', [TanqueController::class, 'recarga'])->name('tanques.recarga');
+
+    // Reportes
+    Route::get('reportes/cuadres/exportar', [ReporteController::class, 'exportarCuadresCSV'])->name('reportes.cuadres.exportar');
 
     // Configuración
     Route::get('/configuracion', [ConfiguracionController::class, 'index'])->name('configuracion.index');

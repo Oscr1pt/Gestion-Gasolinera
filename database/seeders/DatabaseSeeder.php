@@ -18,6 +18,10 @@ class DatabaseSeeder extends Seeder
             AdminUserSeeder::class,
             EmpleadoSeeder::class,
             EstacionTurnoSeeder::class,
+            TipoCombustibleSeeder::class,
+            DispensadorLadosManguerasSeeder::class,
+            ConfiguracionSeeder::class,
+            TanqueSeeder::class,
         ]);
     }
 }

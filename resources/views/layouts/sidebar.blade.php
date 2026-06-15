@@ -76,6 +76,13 @@
             Cuadres
         </a>
 
+        <a href="{{ route('tanques.index') }}" class="group mb-1 flex items-center rounded-lg px-4 py-2.5 transition-all {{ $navLink(request()->routeIs('tanques.*')) }}">
+            <svg class="{{ $navIcon(request()->routeIs('tanques.*')) }} mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/>
+            </svg>
+            Tanques
+        </a>
+
         <p class="mb-2 ml-2 mt-6 text-[10px] font-bold uppercase tracking-widest text-slate-500">Sistema</p>
 
         <a href="{{ route('users.index') }}" class="group mb-1 flex items-center rounded-lg px-4 py-2.5 transition-all {{ $navLink(request()->routeIs('users.*')) }}">

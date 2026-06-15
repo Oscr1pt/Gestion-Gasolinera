@@ -3,29 +3,26 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Manguera extends Model
+class Tanque extends Model
 {
-    protected $table = 'mangueras';
+    use SoftDeletes;
 
     protected $fillable = [
-        'lado_id',
-        'numero',
-        'habilitado',
+        'nombre',
         'tipo_combustible_id',
+        'capacidad_maxima',
+        'existencia_actual',
     ];
 
     protected function casts(): array
     {
         return [
-            'habilitado' => 'boolean',
+            'capacidad_maxima' => 'decimal:3',
+            'existencia_actual' => 'decimal:3',
         ];
-    }
-
-    public function lado(): BelongsTo
-    {
-        return $this->belongsTo(Lado::class);
     }
 
     public function tipoCombustible(): BelongsTo
