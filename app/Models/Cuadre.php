@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Cuadre extends Model
 {
     protected $fillable = [
+        'turno_id',
         'dispensador_id',
         'total',
         'efectivo',
@@ -43,6 +44,11 @@ class Cuadre extends Model
     public function dispensador(): BelongsTo
     {
         return $this->belongsTo(Dispensador::class);
+    }
+
+    public function turno(): BelongsTo
+    {
+        return $this->belongsTo(Turno::class);
     }
 
     public function detalles(): HasMany

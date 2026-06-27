@@ -27,12 +27,6 @@
                     </form>
 
                     <div class="flex flex-col sm:flex-row gap-3">
-            <a href="{{ route('reportes.cuadres.exportar') }}" class="inline-flex items-center justify-center rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-50">
-                <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                </svg>
-                Exportar CSV
-            </a>
             <a href="{{ route('cuadres.create') }}" class="inline-flex items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-blue-500/30 hover:bg-blue-700">
                 <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -49,6 +43,7 @@
                         <tr class="bg-slate-50/80">
                             <th class="px-6 py-3.5 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500">ID</th>
                             <th class="px-6 py-3.5 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500">Dispensador</th>
+                            <th class="px-6 py-3.5 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500">Turno</th>
                             <th class="px-6 py-3.5 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500">Fecha</th>
                             <th class="px-6 py-3.5 text-right text-[11px] font-bold uppercase tracking-wider text-gray-500">Total</th>
                             <th class="px-6 py-3.5 text-center text-[11px] font-bold uppercase tracking-wider text-gray-500">Acciones</th>
@@ -59,6 +54,11 @@
                             <tr class="hover:bg-slate-50/60">
                                 <td class="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">#{{ $cuadre->id }}</td>
                                 <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-600">{{ $cuadre->dispensador->nombre }}</td>
+                                <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
+                                    <span class="inline-flex rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700">
+                                        {{ $cuadre->turno ? $cuadre->turno->nombre : 'N/A' }}
+                                    </span>
+                                </td>
                                 <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-600">{{ $cuadre->created_at->format('d/m/Y H:i') }}</td>
                                 <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-semibold text-gray-900">${{ number_format($cuadre->total, 2) }}</td>
                                 <td class="whitespace-nowrap px-6 py-4 text-center">

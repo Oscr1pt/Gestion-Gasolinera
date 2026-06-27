@@ -7,9 +7,11 @@ use App\Models\CuadreDetalle;
 use App\Models\Dispensador;
 use App\Models\TipoCombustible;
 use App\Models\Tanque;
+use App\Models\Turno;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class CuadreController extends Controller
@@ -34,13 +36,15 @@ class CuadreController extends Controller
             ->orderBy('nombre')
             ->get();
         $tiposCombustible = TipoCombustible::orderBy('nombre')->get();
+        $turnos = Turno::orderBy('hora_inicio')->get();
 
-        return view('cuadres.create', compact('dispensadores', 'tiposCombustible'));
+        return view('cuadres.create', compact('dispensadores', 'tiposCombustible', 'turnos'));
     }
 
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
+            'turno_id' => 'required|exists:turnos,id',
             'dispensador_id' => 'required|exists:dispensadores,id',
             'combustibles' => 'required|array',
             'combustibles.*.tipo_combustible_id' => 'required|exists:tipos_combustible,id',
@@ -57,8 +61,20 @@ class CuadreController extends Controller
             'combustibles.*.numeracion_final.gte' => 'La numeración final debe ser mayor o igual que la inicial.',
         ]);
 
+        // Validación de unicidad: No permitir dos cuadres para el mismo turno en la misma fecha
+        $existeCuadre = Cuadre::where('turno_id', $validated['turno_id'])
+            ->whereDate('created_at', now()->toDateString())
+            ->exists();
+
+        if ($existeCuadre) {
+            throw ValidationException::withMessages([
+                'turno_id' => 'Ya existe un cuadre registrado para este turno en el día de hoy.'
+            ]);
+        }
+
         DB::transaction(function () use ($validated, &$cuadre) {
             $cuadre = Cuadre::create([
+                'turno_id' => $validated['turno_id'],
                 'dispensador_id' => $validated['dispensador_id'],
                 'total' => 0,
                 'efectivo' => $validated['efectivo'] ?? 0,

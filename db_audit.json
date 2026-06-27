@@ -1,0 +1,312 @@
+{
+    "schema": {
+        "configuraciones_generales": [
+            "id",
+            "clave",
+            "valor",
+            "created_at",
+            "updated_at"
+        ],
+        "configuraciones_turnos": [
+            "id",
+            "turno",
+            "hora_inicio",
+            "hora_fin",
+            "created_at",
+            "updated_at"
+        ],
+        "cuadre_detalles": [
+            "id",
+            "cuadre_id",
+            "tipo_combustible_id",
+            "numeracion_inicial",
+            "numeracion_final",
+            "galones",
+            "precio",
+            "total",
+            "created_at",
+            "updated_at",
+            "manguera_id"
+        ],
+        "cuadres": [
+            "id",
+            "dispensador_id",
+            "total",
+            "created_at",
+            "updated_at",
+            "efectivo",
+            "boucher",
+            "credito",
+            "moneda",
+            "gastos"
+        ],
+        "dispensadores": [
+            "id",
+            "nombre",
+            "created_at",
+            "updated_at"
+        ],
+        "empleado_turno": [
+            "id",
+            "empleado_id",
+            "turno_id",
+            "created_at",
+            "updated_at"
+        ],
+        "empleados": [
+            "id",
+            "nombre",
+            "cedula",
+            "telefono",
+            "direccion",
+            "fecha_inicio",
+            "fecha_terminacion",
+            "estado",
+            "posicion",
+            "created_at",
+            "updated_at"
+        ],
+        "estaciones": [
+            "id",
+            "nombre",
+            "ubicacion",
+            "created_at",
+            "updated_at"
+        ],
+        "lados": [
+            "id",
+            "dispensador_id",
+            "nombre",
+            "habilitado",
+            "created_at",
+            "updated_at"
+        ],
+        "mangueras": [
+            "id",
+            "lado_id",
+            "numero",
+            "habilitado",
+            "created_at",
+            "updated_at",
+            "tipo_combustible_id"
+        ],
+        "productos": [
+            "id",
+            "nombre",
+            "codigo_barras",
+            "precio_venta",
+            "costo",
+            "stock_actual",
+            "categoria",
+            "imagen_url",
+            "created_at",
+            "updated_at",
+            "deleted_at"
+        ],
+        "tanques": [
+            "id",
+            "nombre",
+            "tipo_combustible_id",
+            "capacidad_maxima",
+            "existencia_actual",
+            "created_at",
+            "updated_at",
+            "deleted_at"
+        ],
+        "tipos_combustible": [
+            "id",
+            "nombre",
+            "precio_por_galon",
+            "created_at",
+            "updated_at"
+        ],
+        "turnos": [
+            "id",
+            "nombre",
+            "hora_inicio",
+            "hora_fin",
+            "created_at",
+            "updated_at"
+        ],
+        "users": [
+            "id",
+            "name",
+            "email",
+            "email_verified_at",
+            "password",
+            "remember_token",
+            "created_at",
+            "updated_at",
+            "telefono",
+            "estado"
+        ],
+        "venta_pos": [
+            "id",
+            "user_id",
+            "total",
+            "metodo_pago",
+            "created_at",
+            "updated_at"
+        ],
+        "venta_pos_detalles": [
+            "id",
+            "venta_pos_id",
+            "producto_id",
+            "cantidad",
+            "precio_unitario",
+            "subtotal",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "models": {
+        "App\\Models\\ConfiguracionGeneral": {
+            "table": "configuraciones_generales",
+            "fillable": [
+                "clave",
+                "valor"
+            ]
+        },
+        "App\\Models\\ConfiguracionTurno": {
+            "table": "configuraciones_turnos",
+            "fillable": [
+                "turno",
+                "hora_inicio",
+                "hora_fin"
+            ]
+        },
+        "App\\Models\\Cuadre": {
+            "table": "cuadres",
+            "fillable": [
+                "dispensador_id",
+                "total",
+                "efectivo",
+                "boucher",
+                "credito",
+                "moneda",
+                "gastos"
+            ]
+        },
+        "App\\Models\\CuadreDetalle": {
+            "table": "cuadre_detalles",
+            "fillable": [
+                "cuadre_id",
+                "tipo_combustible_id",
+                "manguera_id",
+                "numeracion_inicial",
+                "numeracion_final",
+                "galones",
+                "precio",
+                "total"
+            ]
+        },
+        "App\\Models\\Dispensador": {
+            "table": "dispensadores",
+            "fillable": [
+                "nombre"
+            ]
+        },
+        "App\\Models\\Empleado": {
+            "table": "empleados",
+            "fillable": [
+                "nombre",
+                "cedula",
+                "telefono",
+                "direccion",
+                "fecha_inicio",
+                "fecha_terminacion",
+                "estado",
+                "posicion"
+            ]
+        },
+        "App\\Models\\Estacion": {
+            "table": "estaciones",
+            "fillable": [
+                "nombre",
+                "ubicacion"
+            ]
+        },
+        "App\\Models\\Lado": {
+            "table": "lados",
+            "fillable": [
+                "dispensador_id",
+                "nombre",
+                "habilitado"
+            ]
+        },
+        "App\\Models\\Manguera": {
+            "table": "mangueras",
+            "fillable": [
+                "lado_id",
+                "numero",
+                "habilitado",
+                "tipo_combustible_id"
+            ]
+        },
+        "App\\Models\\Producto": {
+            "table": "productos",
+            "fillable": [
+                "nombre",
+                "codigo_barras",
+                "precio_venta",
+                "costo",
+                "stock_actual",
+                "categoria",
+                "imagen_url"
+            ]
+        },
+        "App\\Models\\Tanque": {
+            "table": "tanques",
+            "fillable": [
+                "nombre",
+                "tipo_combustible_id",
+                "capacidad_maxima",
+                "existencia_actual"
+            ]
+        },
+        "App\\Models\\TipoCombustible": {
+            "table": "tipos_combustible",
+            "fillable": [
+                "nombre",
+                "precio_por_galon"
+            ]
+        },
+        "App\\Models\\Turno": {
+            "table": "turnos",
+            "fillable": [
+                "nombre",
+                "hora_inicio",
+                "hora_fin"
+            ]
+        },
+        "App\\Models\\User": {
+            "table": "users",
+            "fillable": [
+                "name",
+                "email",
+                "password",
+                "telefono",
+                "estado",
+                "role"
+            ]
+        },
+        "App\\Models\\VentaPos": {
+            "table": "venta_pos",
+            "fillable": [
+                "user_id",
+                "total",
+                "metodo_pago"
+            ]
+        },
+        "App\\Models\\VentaPosDetalle": {
+            "table": "venta_pos_detalles",
+            "fillable": [
+                "venta_pos_id",
+                "producto_id",
+                "cantidad",
+                "precio_unitario",
+                "subtotal"
+            ]
+        }
+    }
+}

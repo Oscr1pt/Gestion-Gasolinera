@@ -11,15 +11,30 @@
             <form method="POST" action="{{ route('cuadres.store') }}" class="p-6" x-data="cuadreForm()">
                 @csrf
 
-                <div class="mb-8">
-                    <x-input-label for="dispensador_id" value="Dispensador" />
-                    <select id="dispensador_id" name="dispensador_id" class="mt-1 block w-full rounded-lg border-gray-200 shadow-sm focus:border-blue-500 focus:ring-blue-500" required x-model="selectedDispensadorId" @change="loadDispensador()">
-                        <option value="">Seleccionar dispensador</option>
-                        <template x-for="dispensador in dispensadoresData" :key="dispensador.id">
-                            <option :value="dispensador.id" x-text="dispensador.nombre" :selected="dispensador.id == selectedDispensadorId"></option>
-                        </template>
-                    </select>
-                    <x-input-error :messages="$errors->get('dispensador_id')" class="mt-2" />
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div>
+                        <x-input-label for="turno_id" value="Turno" />
+                        <select id="turno_id" name="turno_id" class="mt-1 block w-full rounded-lg border-gray-200 shadow-sm focus:border-blue-500 focus:ring-blue-500" required>
+                            <option value="">Seleccionar turno</option>
+                            @foreach($turnos as $turno)
+                                <option value="{{ $turno->id }}" {{ old('turno_id') == $turno->id ? 'selected' : '' }}>
+                                    {{ $turno->nombre }} ({{ \Carbon\Carbon::parse($turno->hora_inicio)->format('h:i A') }} - {{ \Carbon\Carbon::parse($turno->hora_fin)->format('h:i A') }})
+                                </option>
+                            @endforeach
+                        </select>
+                        <x-input-error :messages="$errors->get('turno_id')" class="mt-2" />
+                    </div>
+
+                    <div>
+                        <x-input-label for="dispensador_id" value="Dispensador" />
+                        <select id="dispensador_id" name="dispensador_id" class="mt-1 block w-full rounded-lg border-gray-200 shadow-sm focus:border-blue-500 focus:ring-blue-500" required x-model="selectedDispensadorId" @change="loadDispensador()">
+                            <option value="">Seleccionar dispensador</option>
+                            <template x-for="dispensador in dispensadoresData" :key="dispensador.id">
+                                <option :value="dispensador.id" x-text="dispensador.nombre" :selected="dispensador.id == selectedDispensadorId"></option>
+                            </template>
+                        </select>
+                        <x-input-error :messages="$errors->get('dispensador_id')" class="mt-2" />
+                    </div>
                 </div>
 
                 <template x-if="lados.length === 0 && selectedDispensadorId">

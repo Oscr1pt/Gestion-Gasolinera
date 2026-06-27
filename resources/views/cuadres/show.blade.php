@@ -11,8 +11,10 @@
         <div class="flex flex-wrap items-center justify-between gap-3">
             <div>
                 <h2 class="text-xl font-bold text-gray-900">Cuadre #{{ $cuadre->id }}</h2>
-                <p class="mt-1 text-sm text-gray-500">
-                    {{ $cuadre->dispensador->nombre }} · {{ $cuadre->created_at->format('d/m/Y H:i') }}
+                <p class="mt-1 text-sm text-gray-500 font-medium">
+                    <span class="text-blue-600">{{ $cuadre->turno ? $cuadre->turno->nombre : 'Sin Turno' }}</span> <span class="mx-1 text-gray-300">•</span> 
+                    {{ $cuadre->dispensador->nombre }} <span class="mx-1 text-gray-300">•</span> 
+                    {{ $cuadre->created_at->format('d/m/Y H:i') }}
                 </p>
             </div>
             <a href="{{ route('cuadres.index') }}" class="rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50">

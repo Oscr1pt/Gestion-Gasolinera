@@ -14,6 +14,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ConfiguracionController;
 use App\Http\Controllers\PosController;
 use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\VentaController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -37,6 +38,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('lados', LadoController::class)->only(['update']);
     Route::resource('mangueras', MangueraController::class)->only(['update']);
     Route::resource('turnos', TurnoController::class)->except(['show']);
+    
+    // Ventas (Calendario)
+    Route::get('ventas', [VentaController::class, 'index'])->name('ventas.index');
 
     // Tanques
     Route::get('tanques', [TanqueController::class, 'index'])->name('tanques.index');
