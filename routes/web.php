@@ -12,6 +12,8 @@ use App\Http\Controllers\TanqueController;
 use App\Http\Controllers\TurnoController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ConfiguracionController;
+use App\Http\Controllers\PosController;
+use App\Http\Controllers\ProductoController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -42,6 +44,11 @@ Route::middleware('auth')->group(function () {
 
     // Reportes
     Route::get('reportes/cuadres/exportar', [ReporteController::class, 'exportarCuadresCSV'])->name('reportes.cuadres.exportar');
+
+    // Minimarket POS y Productos
+    Route::resource('productos', ProductoController::class)->except(['create', 'show', 'edit']);
+    Route::get('pos', [PosController::class, 'index'])->name('pos.index');
+    Route::post('pos/checkout', [PosController::class, 'store'])->name('pos.store');
 
     // Configuración
     Route::get('/configuracion', [ConfiguracionController::class, 'index'])->name('configuracion.index');

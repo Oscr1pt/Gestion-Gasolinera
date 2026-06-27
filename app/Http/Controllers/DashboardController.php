@@ -7,6 +7,7 @@ use App\Models\Dispensador;
 use App\Models\Empleado;
 use App\Models\Turno;
 use App\Models\Tanque;
+use App\Models\VentaPos;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Carbon\Carbon;
@@ -18,8 +19,11 @@ class DashboardController extends Controller
         $hoy = Carbon::today();
 
         $empleadosActivos = Empleado::where('estado', 'activo')->count();
-        $ventasHoy = Cuadre::whereDate('created_at', $hoy)->sum('total');
-        $turnosHoy = Cuadre::whereDate('created_at', $hoy)->count();
+        $ventasCombustible = Cuadre::whereDate('created_at', $hoy)->sum('total');
+        $ventasTienda = VentaPos::whereDate('created_at', $hoy)->sum('total');
+        $ventasTotales = $ventasCombustible + $ventasTienda;
+        
+        $turnosActivos = Turno::where('estado', 'Activo')->count();
         $dispensadorasActivas = Dispensador::count();
 
         $ventasUltimaSemana = [];
@@ -36,9 +40,11 @@ class DashboardController extends Controller
             'kpis' => [
                 'empleados_activos' => $empleadosActivos,
                 'empleados_trend' => $empleadosActivos > 0 ? '+0 este mes' : null,
-                'turnos_hoy' => $turnosHoy,
+                'turnos_activos' => $turnosActivos,
                 'dispensadoras' => $dispensadorasActivas,
-                'ventas_hoy' => $ventasHoy,
+                'ventas_combustible' => $ventasCombustible,
+                'ventas_tienda' => $ventasTienda,
+                'ventas_totales' => $ventasTotales,
             ],
             'chartVentasDia' => [
                 'labels' => $labels,
