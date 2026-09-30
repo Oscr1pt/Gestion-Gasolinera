@@ -17,7 +17,7 @@ class AdminUserSeeder extends Seeder
             ['email' => 'admin@gasolinera.com'],
             [
                 'name' => 'Administrador',
-                'password' => Hash::make('12345678'),
+                'password' => Hash::make('123456789'),
                 'estado' => true,
                 'role' => 'admin',
             ]
